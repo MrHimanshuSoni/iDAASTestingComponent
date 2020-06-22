@@ -161,6 +161,60 @@ public class CamelConfiguration extends RouteBuilder {
           .wireTap("direct:auditing")
    ;
 
+    /*
+     *   HCDD-EIP
+     *   Healthcare Data Distribution Enterprise Integration Pattern
+     *   HL7
+     */
+    from("kafka://localhost:9092?topic=MCTN_MMS_ADT&brokers=localhost:9092")
+            .routeId("ADT-MiddleTier")
+            // Auditing
+            .setProperty("processingtype").constant("data")
+            .setProperty("appname").constant("iDAAS-ConnectClinical-IndustryStd")
+            .setProperty("industrystd").constant("HL7")
+            .setProperty("messagetrigger").constant("ADT")
+            .setProperty("component").simple("${routeId}")
+            .setProperty("camelID").simple("${camelId}")
+            .setProperty("exchangeID").simple("${exchangeId}")
+            .setProperty("internalMsgID").simple("${id}")
+            .setProperty("bodyData").simple("${body}")
+            .setProperty("processname").constant("MTier")
+            .setProperty("auditdetails").constant("ADT to Enterprise By Sending App By Data Type middle tier")
+            .wireTap("direct:auditing")
+            // Enterprise Message By Sending App By Type
+            .convertBodyTo(String.class).to("kafka://localhost:9092?topic=MMS_ADT&brokers=localhost:9092")
+            // Auditing
+            .setProperty("processingtype").constant("data")
+            .setProperty("appname").constant("iDAAS-ConnectClinical-IndustryStd")
+            .setProperty("industrystd").constant("HL7")
+            .setProperty("messagetrigger").constant("ADT")
+            .setProperty("component").simple("${routeId}")
+            .setProperty("camelID").simple("${camelId}")
+            .setProperty("exchangeID").simple("${exchangeId}")
+            .setProperty("internalMsgID").simple("${id}")
+            .setProperty("bodyData").simple("${body}")
+            .setProperty("processname").constant("MTier")
+            .setProperty("auditdetails").constant("ADT to Facility By Sending App By Data Type middle tier")
+            .wireTap("direct:auditing")
+            // Facility By Type
+            .convertBodyTo(String.class).to("kafka://localhost:9092?topic=MCTN_ADT&brokers=localhost:9092")
+            // Auditing
+            .setProperty("processingtype").constant("data")
+            .setProperty("appname").constant("iDAAS-ConnectClinical-IndustryStd")
+            .setProperty("industrystd").constant("HL7")
+            .setProperty("messagetrigger").constant("ADT")
+            .setProperty("component").simple("${routeId}")
+            .setProperty("camelID").simple("${camelId}")
+            .setProperty("exchangeID").simple("${exchangeId}")
+            .setProperty("internalMsgID").simple("${id}")
+            .setProperty("bodyData").simple("${body}")
+            .setProperty("processname").constant("MTier")
+            .setProperty("auditdetails").constant("ADT to Enterprise By Sending App By Data Type middle tier")
+            .wireTap("direct:auditing")
+            // Enterprise Message By Type
+            .convertBodyTo(String.class).to("kafka://localhost:9092?topic=ENT_ADT&brokers=localhost:9092")
+    ;
+
     // FHIR
     from("servlet://condition?exchangePattern=InOut")
         //from("servlet://condition?servletName=CamelServlet")
@@ -199,56 +253,6 @@ public class CamelConfiguration extends RouteBuilder {
         .wireTap("direct:auditing")
     ;
 
-   /*
-    *   HCDD-EIP
-    *   Healthcare Data Distribution Enterprise Integration Pattern
-    *   HL7
-    */
-
-    from("kafka://localhost:9092?topic=MCTN_MMS_ADT&brokers=localhost:9092")
-            .routeId("ADT-MiddleTier")
-            // Auditing
-            .setProperty("processingtype").constant("data")
-            .setProperty("appname").constant("iDAAS-ConnectClinical-IndustryStd")
-            .setProperty("industrystd").constant("HL7")
-            .setProperty("messagetrigger").constant("ADT")
-            .setProperty("component").simple("${routeId}")
-            .setProperty("processname").constant("MTier")
-            .setProperty("auditdetails").constant("ADT to Enterprise By Sending App By Data Type middle tier")
-            .wireTap("direct:auditing")
-            // Enterprise Message By Sending App By Type
-            .to("kafka:MMS_ADT?brokers=localhost:9092")
-            // Auditing
-            .setProperty("processingtype").constant("data")
-            .setProperty("appname").constant("iDAAS-ConnectClinical-IndustryStd")
-            .setProperty("industrystd").constant("HL7")
-            .setProperty("messagetrigger").constant("ADT")
-            .setProperty("component").simple("${routeId}")
-            .setProperty("camelID").simple("${camelId}")
-            .setProperty("exchangeID").simple("${exchangeId}")
-            .setProperty("internalMsgID").simple("${id}")
-            .setProperty("bodyData").simple("${body}")
-            .setProperty("processname").constant("MTier")
-            .setProperty("auditdetails").constant("ADT to Facility By Sending App By Data Type middle tier")
-            .wireTap("direct:auditing")
-            // Facility By Type
-            .convertBodyTo(String.class).to("kafka://localhost:9092?topic=MCTN_ADT&brokers=localhost:9092")
-            // Auditing
-            .setProperty("processingtype").constant("data")
-            .setProperty("appname").constant("iDAAS-ConnectClinical-IndustryStd")
-            .setProperty("industrystd").constant("HL7")
-            .setProperty("messagetrigger").constant("ADT")
-            .setProperty("component").simple("${routeId}")
-            .setProperty("camelID").simple("${camelId}")
-            .setProperty("exchangeID").simple("${exchangeId}")
-            .setProperty("internalMsgID").simple("${id}")
-            .setProperty("bodyData").simple("${body}")
-            .setProperty("processname").constant("MTier")
-            .setProperty("auditdetails").constant("ADT to Enterprise By Sending App By Data Type middle tier")
-            .wireTap("direct:auditing")
-            // Enterprise Message By Type
-            .convertBodyTo(String.class).to("kafka://localhost:9092?topic=ENT_ADT&brokers=localhost:9092")
-    ;
     /*
      *  HCDD-EIP
      *  FHIR
