@@ -1,3 +1,4 @@
+#_mydir='/Users/alscott/RedHatTech/kafka_2.12-2.5.0.redhat-00003'
 _mydir='/Users/alscott/RedHatTech/kafka_2.12-2.4.0.redhat-00005'
 #_mydir='/Users/developer/RedHatTech/kafka_2.12-2.4.0.redhat-00005'
 

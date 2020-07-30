@@ -100,7 +100,7 @@ public class CamelConfiguration extends RouteBuilder {
     // String class and kafka
     // https://www.codota.com/code/java/methods/org.apache.camel.model.RouteDefinition/convertBodyTo
     from("direct:auditing")
-         .setHeader("messageprocesseddate").simple("${date:now:yyyy-MM-dd}")
+        .setHeader("messageprocesseddate").simple("${date:now:yyyy-MM-dd}")
         .setHeader("messageprocessedtime").simple("${date:now:HH:mm:ss:SSS}")
         .setHeader("processingtype").exchangeProperty("processingtype")
         .setHeader("industrystd").exchangeProperty("industrystd")
